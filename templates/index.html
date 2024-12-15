@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BlockyPlayz.de - Minecraft Server</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
+    <style>
+
+        :root {
+            --blocky-pink: #FF33FF;
+            --blocky-blue: #33CCFF;
+            --dark-purple: #1a0033;
+        }
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+            100% { transform: translateY(0px); }
+        }
+        @keyframes fadeUp {
+            0% {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        .fade-up {
+            opacity: 0;
+            animation: fadeUp 0.6s ease forwards;
+            will-change: transform;
+        }
+
+
+        @keyframes fadeDown {
+            0% {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        .fade-down {
+            opacity: 0;
+            animation: fadeDown 0.6s ease forwards;
+            will-change: transform;
+        }
+        .delay-100 { animation-delay: 0.1s; }
+        .delay-200 { animation-delay: 0.2s; }
+        .delay-300 { animation-delay: 0.3s; }
+        .delay-400 { animation-delay: 0.4s; }
+        .delay-500 { animation-delay: 0.5s; }
+        
+        .hero-section {
+            position: relative;
+            min-height: 80vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-image: url('/static/hero-bg.png');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            padding: 4rem 0;
+            animation: fadeUp .5s ease-in-out ;
+        }
+
+        .hero-section::before {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 300px;
+            background: linear-gradient(to top, 
+                var(--dark-purple) 0%,
+                rgba(26, 0, 51, 0.4) 50%,
+                transparent 100%
+            );
+            pointer-events: none;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 10;
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        .hero-logo {
+            height: 12rem;
+            width: auto;
+            margin-bottom: 2rem;
+            animation: logoAnimation 8s infinite ease-in-out;
+        }
+
+        @keyframes logoAnimation {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            20% {
+                transform: translateY(-30px);
+            }
+            40% {
+                transform: translateY(-45px);
+            }
+            60% {
+                transform: translateY(-30px);
+            }
+            80% {
+                transform: translateY(-15px);
+            }
+        }
+
+        .hero-title {
+            font-size: 4rem;
+            margin-bottom: 1.5rem;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+
+        .hero-description {
+            font-size: 1.5rem;
+            margin-bottom: 2rem;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+        }
+
+        .hero-section::before {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 300px;
+            background: linear-gradient(to top, 
+                var(--dark-purple) 0%,
+                rgba(26, 0, 51, 0.4) 50%,
+                transparent 100%
+            );
+            pointer-events: none;
+        }
+
+        .hero-section::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(26, 0, 51, 0.492);
+            pointer-events: none;
+        }
+
+
+
+        .copy-container {
+            display: inline-flex;
+            border-radius: 8px;
+            overflow: hidden;
+            position: relative;
+        }
+        .copy-field {
+            background-color: rgba(26, 0, 51, 0.8);
+            border: none;
+            padding: 12px 24px;
+            font-size: 18px;
+            color: var(--blocky-blue);
+            outline: none;
+        }
+        .copy-btn {
+            background-color: var(--blocky-blue);
+            padding: 12px 16px;
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .copy-btn:hover {
+            filter: brightness(110%);
+        }
+        .bg-custom-dark {
+            background-color: var(--dark-purple);
+        }
+        .bg-custom-darker {
+            background-color: rgba(26, 0, 51, 0.8);
+        }
+        .text-blocky-pink {
+            color: var(--blocky-pink);
+        }
+        .text-blocky-blue {
+            color: var(--blocky-blue);
+        }
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: var(--blocky-blue);
+            color: white;
+            padding: 12px 24px;
+            border-radius: 8px;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            pointer-events: none;
+            z-index: 10000;
+        }
+        .toast.show {
+            opacity: 1;
+        }
+        .copy-wrapper {
+            background-color: rgba(26, 0, 51, 0.8);
+            border: 2px solid var(--blocky-blue);
+            border-radius: 8px;
+            display: inline-flex;
+            overflow: hidden;
+        }
+
+        .playerCountDotContainer {
+            position: relative;
+        }
+
+        .playerCountDot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background-color: var(--blocky-pink);
+            margin-right: 5px;
+            animation: pulse 3s ease-in-out infinite alternate;
+        }
+
+        .playerCountDotContainer::after {
+            content: '';
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background-color: var(--blocky-blue);
+            position: absolute;
+            top: 0px;
+            left: 0px;
+            animation: pulse .5s ease-in-out infinite alternate;
+            animation-delay: .5s;
+        }
+
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+                opacity: 1;
+            }
+            20% {
+                transform: scale(.7);
+                opacity: .7;
+            }
+            40% {
+                transform: scale(1);
+                opacity: 1;
+            }
+            60% {
+                transform: scale(.7);
+                opacity: .7;
+            }
+            80% {
+                transform: scale(1);
+                opacity: 1;
+            }
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            overflow-x: hidden;
+        }
+
+    </style>
+</head>
+<body class="bg-custom-dark text-white">
+    <script>
+        window.onload = function() {
+            window.scrollTo(0, 0);
+        }
+    </script>
+
+    <!-- Navigation -->
+    <nav class="bg-custom-darker p-4 fade-up sticky top-0 z-20">
+        <div class="container mx-auto flex justify-between items-center">
+            <div class="flex items-center gap-3">
+                <img onclick="window.location.href = '/'" src="/static/BP.png" alt="BP Logo" class="h-8" style="cursor: pointer;" draggable="false">
+                <div class="playerCountDot"></div> <span class="font-semibold text-blocky-blue" id="playerCount">Players online: Loading...</span>
+            </div>
+            <div class="space-x-6">
+                <a href="https://store.blockyplayz.de" class="hover:text-blocky-blue">Store</a>
+                <a href="https://rules.blockyplayz.de" class="hover:text-blocky-pink">Rules</a>
+                <a href="https://vote.blockyplayz.de" class="hover:text-blocky-blue">Vote</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero-section">
+        <div class="hero-content">
+            <img src="/static/BlockyPlayz.png" alt="BlockyPlayz Logo" class="hero-logo fade-up delay-100" draggable="false" style="opacity: 1;">
+            <h1 class="hero-title text-blocky-pink fade-up delay-200"><strong>Welcome to BlockyPlayz</strong></h1>
+            <p class="hero-description text-blocky-blue fade-up delay-300">Jump into an enhanced survival experience with custom features, weekly events, and a thriving player economy. Join thousands of players building their legacy!</p>
+            <div class="copy-wrapper fade-up delay-400">
+                <input type="text" value="blockyplayz.de" readonly class="copy-field">
+                <button onclick="copyServerIP()" class="copy-btn">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                        <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <div class="bg-custom-darker py-20">
+        <div class="container mx-auto px-4 space-y-24">
+            <!-- Feature 1 -->
+            <div class="flex flex-col md:flex-row items-center gap-8">
+                <div class="w-full md:w-1/2 text-center md:text-left fade-up delay-200">
+                    <div class="text-blocky-pink text-4xl mb-4">🏰</div>
+                    <h3 class="text-2xl font-bold mb-2 text-blocky-blue">Custom Survival Experience</h3>
+                    <p class="text-gray-300">Experience our uniquely enhanced survival gameplay with custom enchantments, special items, and balanced economy system.</p>
+                </div>
+                <div class="w-full md:w-1/2 relative">
+                    <img src="/static/img/customsurvival.png" alt="Feature 1" class="w-full rounded-lg shadow-lg"/>
+                    <div class="absolute inset-0 rounded-lg pointer-events-none" style="box-shadow: inset 0 0 50px 12px rgba(0, 0, 0, 0.5);"></div>
+                </div>
+            </div>
+
+            <!-- Feature 2 -->
+            <div class="flex flex-col md:flex-row-reverse items-center gap-8">
+                <div class="w-full md:w-1/2 text-center md:text-left fade-up delay-300">
+                    <div class="text-blocky-blue text-4xl mb-4">⚔️</div>
+                    <h3 class="text-2xl font-bold mb-2 text-blocky-pink">Weekly Events & Challenges</h3>
+                    <p class="text-gray-300">Join exciting weekly events, from PvP tournaments to building competitions, with exclusive rewards and special ranks up for grabs.</p>
+                </div>
+                <div class="w-full md:w-1/2 relative">
+                    <img src="/static/img/events.png" alt="Feature 2" class="w-full rounded-lg shadow-lg"/>
+                    <div class="absolute inset-0 rounded-lg pointer-events-none" style="box-shadow: inset 0 0 50px 12px rgba(0, 0, 0, 0.5);"></div>
+                </div>
+            </div>
+
+            <!-- Feature 3 -->
+            <div class="flex flex-col md:flex-row items-center gap-8">
+                <div class="w-full md:w-1/2 text-center md:text-left fade-up delay-400">
+                    <div class="text-blocky-pink text-4xl mb-4">🎮</div>
+                    <h3 class="text-2xl font-bold mb-2 text-blocky-blue">Player-Driven Economy</h3>
+                    <p class="text-gray-300">Trade with other players in our dynamic marketplace, run your own shops, and build your financial empire in our thriving economy.</p>
+                </div>
+                <div class="w-full md:w-1/2 relative">
+                    <img src="/static/img/economy.png" alt="Feature 3" class="w-full rounded-lg shadow-lg"/>
+                    <div class="absolute inset-0 rounded-lg pointer-events-none" style="box-shadow: inset 0 0 50px 12px rgba(0, 0, 0, 0.5);"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+    <!-- Team Section -->
+    <div class="bg-custom-darker py-20">
+        <h1 class="text-blocky-pink text-4xl font-bold mb-4 text-center fade-up delay-100">The Team</h1>
+        <div class="container mx-auto px-4">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div class="text-center p-6 fade-up delay-200">
+                    <img class="h-24 w-24 text-blocky-pink mb-4 mx-auto block" src="/static/team/TheGalitube.png">
+                    <h3 class="text-2xl font-bold mb-2 text-blocky-pink">TheGalitube</h3>
+                    <p class="text-gray-300">Founder/Admin</p>
+                </div>
+                <div class="text-center p-6 fade-up delay-200">
+                    <img class="h-24 w-24 text-blocky-pink mb-4 mx-auto block" src="/static/team/Trynocs.png">
+                    <h3 class="text-2xl font-bold mb-2 text-blocky-blue">Trynocs</h3>
+                    <p class="text-gray-300">Head Developer/Admin</p>
+                </div>
+            </div>
+        </div>
+        <div class="container mx-auto px-4">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div class="text-center p-6 fade-up delay-200">
+                    <img class="h-24 w-24 text-blocky-pink mb-4 mx-auto block" src="/static/team/Keeaanu.png">
+                    <h3 class="text-2xl font-bold mb-2 text-blocky-blue">Keanu</h3>
+                    <p class="text-gray-300">Team Leader</p>
+                </div>
+                <div class="text-center p-6 fade-up delay-200">
+                    <img class="h-24 w-24 text-blocky-pink mb-4 mx-auto block" src="/static/team/Nosowge.png">
+                    <h3 class="text-2xl font-bold mb-2 text-blocky-pink">Nosowge</h3>
+                    <p class="text-gray-300">Team Leader</p>
+                </div>
+            </div>
+        </div>
+        <br><br><br><br>
+        <div class="container mx-auto px-4 grid grid-cols-1 md:grid-cols-1 gap-8">
+            <div class="text-center p-6 fade-up delay-200">
+                <img class="h-24 w-24 text-blocky-pink mb-4 mx-auto block" src="/static/team/Das_F1sHy312.png">
+                <h3 class="text-2xl font-bold mb-2 text-white">Das_F1sHy312</h3>
+                <p class="text-gray-300">Developer</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-custom-darker py-8 fade-up delay-500">
+        <div class="container mx-auto px-4 text-center">
+            <img src="/static/BP.png" alt="BP Logo" class="h-8 mx-auto mb-4" draggable="false">
+            <p class="text-gray-400">© 2024 Galitube GbR - All rights reserved</p>
+        </div>
+    </footer>
+
+    <div id="toast" class="toast">Copied!</div>
+
+    <script>
+        function copyServerIP() {
+            const input = document.querySelector('.copy-field');
+            const toast = document.getElementById('toast');
+            
+            input.select();
+            navigator.clipboard.writeText('blockyplayz.de').then(() => {
+                toast.classList.add('show');
+                setTimeout(() => {
+                    toast.classList.remove('show');
+                }, 2000);
+            }).catch(err => {
+                console.error('Failed to copy text: ', err);
+            });
+        }
+
+        const playerCount = document.getElementById('playerCount');
+        function updatePlayerCount() {
+            fetch('https://api.mcsrvstat.us/2/hypixel.net')
+                .then(response => response.json())
+                .then(data => {
+                    playerCount.innerHTML = `Players online: ${data.players.online}`;
+                })
+                .catch(err => {
+                    console.error('Failed to fetch player count: ', err);
+                });
+        }
+
+        updatePlayerCount();
+        setInterval(updatePlayerCount, 60 * 1000);
+    </script>
+</body>
+</html>
